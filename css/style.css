@@ -28,6 +28,7 @@ body{
   object-position: left;
 }
 
+
 .container{
   width: 100%;
   max-width: 700px;
@@ -76,8 +77,21 @@ body{
   justify-content: center ;
 }
 
-.check-mark:hover{
+.check-mark img{
+  visibility: hidden;
+}
+
+.check-mark:hover img, .check-mark.checked img{
+visibility: visible;
+}
+
+.check-mark:hover, .check-mark.checked{
  background: linear-gradient(135deg, #55ddff 0%,#c058f3 100%);
+}
+
+.todo-text.checked{
+  text-decoration: line-through;
+  color:hsl(233,14%, 35%);
 }
 
 .new-todo-input{

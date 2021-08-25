@@ -29,15 +29,15 @@ function generateItems(items) {
 
   let itemsHTML = "";
   items.forEach((item) => {
-    console.log(item);
+    // console.log(item);
     itemsHTML += `     
         <div class="todo-item">
           <div class="check">
-            <div class="check-mark">
+            <div data-id="${item.id}" class="check-mark ${item.status == "completed" ? "checked" : ""}">
               <img src="images/icon-check.svg" alt="check icon">
             </div>
           </div>
-          <div class="todo-text">
+          <div class="todo-text ${item.status == "completed" ? "checked" : ""}">
             ${item.text}
           </div>
         </div>
@@ -46,5 +46,36 @@ function generateItems(items) {
   })
 
   document.querySelector(".todo-items").innerHTML = itemsHTML;
+  createEventListeners();
+}
+
+function createEventListeners() {
+  let todoCheckMarks = document.querySelectorAll(".todo-item .check-mark");
+
+  todoCheckMarks.forEach((checkMark) => {
+    checkMark.addEventListener("click", function () {
+      markCompleted(checkMark.dataset.id);
+    })
+  })
+}
+
+function markCompleted(id) {
+  //coming from database
+  let item = db.collection("todo-items").doc(id);
+  item.get().then(function (doc) {
+    if (doc.exists) {
+      // console.log("The Doc: ", doc.data());
+      let status = doc.data().status;
+      if (status == "active") {
+        item.update({
+          status: "completed"
+        })
+      } else if (status == "completed") {
+        item.update({
+          status: "active"
+        })
+      }
+    }
+  })
 }
 getItems();
